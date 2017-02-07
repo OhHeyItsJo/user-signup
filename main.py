@@ -24,7 +24,7 @@ form="""
     <br>
 <div>
     <label for="email">Email(optional)</label>
-    <input type="text" name="email" value='%(email)s' pattern="[\S]+@[\S]+\.[\S]+$" required>
+    <input type="text" name="email" value='%(email)s' pattern="[\S]+@[\S]+\.[\S]+$">
 </div>
     <input type="submit">
 </div>
