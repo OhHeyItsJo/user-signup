@@ -1,25 +1,65 @@
-#!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 import webapp2
+import re
 
-class MainHandler(webapp2.RequestHandler):
+
+form="""
+<!DOCTYPE html>
+<html>
+<form method="post">
+<div>
+    <label for="username">Username</label>
+    <input type="text name="username" value='%(username)s' pattern="[a-zA-Z0-9_-]{3,20}$" required>
+</div>
+    <br>
+<div>
+    <label for="password">Password</label>
+    <input type="password" name="password" pattern=".{3,20}$" required>
+    <span style="color:red">%(password)s</span>
+</div>
+    <br>
+<div>
+    <label for="verify">Verify Password</label>
+    <input type="password" name="verify" patterm = ".{3,20}$" required>
+</div>
+    <br>
+<div>
+    <label for="email">Email(optional)</label>
+    <input type="text" name="email" value='%(email)s' pattern="[\S]+@[\S]+\.[\S]+$" required>
+</div>
+    <input type="submit">
+</div>
+</form>
+</html>
+"""
+def password_verify(password, verify):
+    if password == verify:
+        return True
+
+class MainPage(webapp2.RequestHandler):
+    def writeform(self, username="", password="", email=""):
+        value = {
+        "username": username,
+        "password": password,
+        "email": email
+        }
+        self.response.write(form % value)
+
     def get(self):
-        self.response.write('Hello world!')
+        self.writeform()
 
-app = webapp2.WSGIApplication([
-    ('/', MainHandler)
-], debug=True)
+    def post(self):
+        user_name = self.request.get("username")
+        password = self.request.get("password")
+        verify = self.request.get("verify")
+        email = self.request.get("email")
+
+        passwords= password_verify(password, verify)
+
+        if not passwords:
+            self.writeform(user_name, "Passwords do not match!", email)
+        else:
+            self.writeform()
+
+
+app = webapp2.WSGIApplication([('/', MainPage)],
+                               debug=True)
