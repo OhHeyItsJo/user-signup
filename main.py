@@ -1,10 +1,5 @@
 import webapp2
-import jinja2
-import os
 import re
-
-template_dir = os.path.join(os.path.dirname(__file__), "templates")
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir))
 
 
 form="""
@@ -31,7 +26,7 @@ form="""
     <label for="email">Email(optional)</label>
     <input type="text" name="email" value='%(email)s' pattern="[\S]+@[\S]+\.[\S]+$">
 </div>
-    <input type="button" onclick="location.href='welcome.html';" value="submit" />
+    <input value="submit">
 </div>
 </form>
 </html>
