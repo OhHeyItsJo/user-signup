@@ -8,7 +8,7 @@ form="""
 <form method="post">
 <div>
     <label for="username">Username</label>
-    <input type="text name="username" value='%(username)s' pattern="[a-zA-Z0-9_-]{3,20}$" required>
+    <input type="text" name="username" value='%(username)s' pattern="[a-zA-Z0-9_-]{3,20}$" required>
 </div>
     <br>
 <div>
@@ -58,8 +58,11 @@ class MainPage(webapp2.RequestHandler):
         if not passwords:
             self.writeform(user_name, "Passwords do not match!", email)
         else:
-            self.writeform()
+            self.redirect("/welcome?Username=" + user_name)
 
+class WelcomePage(webapp2.RequestHandler):
+    def get(self):
+        self.response.write("<p>" + "<h1>" + "Welcome, " + self.request.get("Username") + "</h1>" + "</p>")
 
-app = webapp2.WSGIApplication([('/', MainPage)],
+app = webapp2.WSGIApplication([('/', MainPage), ('/welcome', WelcomePage)],
                                debug=True)
